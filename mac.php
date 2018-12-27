@@ -58,6 +58,7 @@
                 $Select_L=file(Select_L.txt);
                 $ligne_L=count($Select_L);
                 for ($l=0;$l<$ligne_L;$l++){
+                  echo"$Select_L[$l]"
                 $BlackList=fopen("MAC/test.txt","a");
                 fputs($BlackList,"$Select_L[$l]");
 
