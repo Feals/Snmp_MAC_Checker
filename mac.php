@@ -27,12 +27,12 @@
   function createSelectB($fic){
     $tabFic=file($fic); #Fichier --> Tableau
     $nbLigne=count($tabFic);
-    $chaineSelect='<div> <form action="mac.php" method="post">';
+    $chaineSelect='<div><form action="mac.php" method="post">';
     for ($i=0; $i<$nbLigne; $i++){ #Chaque ligne = Option
-        $chaineSelect.='<br><input type="checkbox" id="'.$tabFic[$i].'" name="MACL[]" value="'.$tabFic[$i].'"';
+        $chaineSelect.='<br><input type="checkbox" id="'.$tabFic[$i].'" name="MACB[]" value="'.$tabFic[$i].'"';
         $chaineSelect.='>'.$tabFic[$i].'</label>';
     }
-    $chaineSelect.=' <br> <input type="submit" value="Add to selected"> </form> </div>';
+    $chaineSelect.='<br><input type="submit" value="Add to selected"></form></div>';
     return $chaineSelect;
 }
 ?>
@@ -48,24 +48,20 @@
             <!--Barre Superieure-->
                 <div class="w3-bar w3-black">
                     <a href="?click=1" class="w3-bar-item w3-button">Add To BlackList</a>
-                    <a href="#" class="w3-bar-item w3-button">Add Blacklisted into Dictionary</a>
+                    <a href="?clock=1" class="w3-bar-item w3-button">Add Blacklisted into Dictionary</a>
                     <a href="http://10.36.0.226/mac.php" class="w3-bar-item w3-button">Refresh</a>
                 </div>
 
 
                 <?php
                 if (isset($_GET["click"])) {
-                $Select_L=file(Select_L.txt);
-                $ligne_L=count($Select_L);
-                for ($l=0;$l<$ligne_L;$l++){
-                  echo"$Select_L[$l]"
-                $BlackList=fopen("MAC/test.txt","a");
-                fputs($BlackList,"$Select_L[$l]");
+		            $test = shell_exec("bash MAC/LearnToBlacklist.sh");
+      		      }
 
-                }
-                fclose($BlackList);
-                }
-                 ?>
+                  if (isset($_GET["clock"])) {
+                  $test = shell_exec("bash MAC/BlacklistToDictionnary.sh");
+                  }
+                ?>
 
 
             <!--------------------->
@@ -74,8 +70,9 @@
     <div class="w3-row">
         <div class="w3-half w3-blue w3-container w3-center" style="height:100%">
             <div class="w3-padding-64">
-                <h1>Learn</h1>
-
+                <div class="w3-padding-64">
+		<h1>Learn</h1>
+		</div>
                 <?php echo createSelectL("MAC/Learned_MAC.site");?>
 
     <?php
@@ -93,13 +90,14 @@
     ?>
 
 
+		</div>
             </div>
-            <div class="w3-padding-64">
-            </div>
-        </div>
         <div class="w3-half w3-blue-grey w3-container" style="height:100%">
-            <div class="w3-padding-64 w3-center">
-                <h1>BlackList</h1>
+     <div class="w3-padding-64 w3-center">
+  <div class="w3-padding-64">
+          <h1>BlackList</h1>
+
+          </div>
 
                 <?php echo createSelectB("MAC/Blacklist_MAC.txt", "test1", "2"); ?>
 
@@ -111,7 +109,7 @@
 		}
     foreach($_POST['MACB'] as $valeur_B){
     echo "<b> $valeur_B </b> is selected<br>";
-    $fp_B = fopen("Select_B.txt","r+");
+    $fp_B = fopen("Select_B.txt","a");
     fputs($fp_B,"$valeur_B");
     }
     fclose($fp_B);
